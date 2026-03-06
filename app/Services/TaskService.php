@@ -2,6 +2,8 @@
 namespace App\Services;
 
 use App\Models\Task;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class TaskService
 {
@@ -14,5 +16,18 @@ class TaskService
     {
         $task->update(['status' => $status]);
         return $task;
+    }
+    public function getAllTasks(): LengthAwarePaginator
+    {
+        $user = Auth::user();
+        $query = Task::with(['project', 'developer']);
+
+        // Logic: If user is developer, only show their assigned tasks
+        if ($user->role === 'developer') {
+            $query->where('assigned_to', $user->id);
+        }
+
+        // Return paginated results (Requirement: Part 2 API)
+        return $query->paginate(10);
     }
 }
