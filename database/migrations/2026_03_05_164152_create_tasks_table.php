@@ -21,6 +21,7 @@ return new class extends Migration
         $table->string('priority')->default('medium'); // low, medium, high
         $table->string('status')->default('todo'); // todo, in_progress, done
         $table->timestamps();
+        $table->softDeletes();
     });
     }
 
