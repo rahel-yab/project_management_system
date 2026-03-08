@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProjectPolicy
 {
@@ -13,7 +12,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'manager'], true);
     }
 
     /**
@@ -21,7 +20,11 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return false;
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return $user->role === 'manager' && (int) $project->created_by === (int) $user->id;
     }
 
     /**
@@ -29,7 +32,7 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'manager'], true);
     }
 
     /**
@@ -37,7 +40,11 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return false;
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return $user->role === 'manager' && (int) $project->created_by === (int) $user->id;
     }
 
     /**
@@ -45,8 +52,11 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-    // Rule: You can delete if you are an Admin OR the Manager who created it
-    return $user->role === 'admin' || $user->id === $project->created_by;
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return $user->role === 'manager' && (int) $project->created_by === (int) $user->id;
     }
 
     /**
@@ -54,7 +64,7 @@ class ProjectPolicy
      */
     public function restore(User $user, Project $project): bool
     {
-        return false;
+        return $this->delete($user, $project);
     }
 
     /**
@@ -62,6 +72,6 @@ class ProjectPolicy
      */
     public function forceDelete(User $user, Project $project): bool
     {
-        return false;
+        return $this->delete($user, $project);
     }
 }
