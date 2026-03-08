@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\MyAssignedTasksWidget;
+use App\Filament\Widgets\MyNotificationsWidget;
 use App\Filament\Widgets\ProjectStats;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -39,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->widgets([
                 ProjectStats::class,
+                MyNotificationsWidget::class,
                 MyAssignedTasksWidget::class,
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,

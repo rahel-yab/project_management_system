@@ -9,17 +9,7 @@ class TaskService
 {
     public function createTask(array $data): Task
 {
-    $task = Task::create($data);
-
-    // Get the developer assigned to this task
-    $developer = $task->developer; 
-
-    if ($developer) {
-        // Trigger the notification
-        $developer->notify(new \App\Notifications\TaskAssignedNotification($task));
-    }
-
-    return $task;
+    return Task::create($data);
 }
 
     public function updateStatus(Task $task, string $status): Task

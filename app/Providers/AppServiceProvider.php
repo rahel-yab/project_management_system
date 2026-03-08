@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Project;
+use App\Observers\TaskObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Task;
 use App\Policies\ProjectPolicy;
@@ -18,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
 {
     Gate::policy(Project::class, ProjectPolicy::class);
     Gate::policy(Task::class, TaskPolicy::class);
+    Task::observe(TaskObserver::class);
 }
     public function register(): void
     {
