@@ -30,4 +30,11 @@ class StoreTaskRequest extends FormRequest
             'status' => ['required', new Enum(TaskStatus::class)],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'assigned_to.exists' => 'Cannot assign a task to this user. Only developers can be assigned tasks.',
+        ];
+    }
 }
