@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Comment;
 use App\Models\Project;
 use App\Models\Task;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -16,6 +17,7 @@ class ProjectStats extends BaseWidget
 
         if ($user->role === 'developer') {
             $myTasks = Task::query()->where('assigned_to', $user->id);
+            $myComments = Comment::query()->whereHas('task', fn($q) => $q->where('assigned_to', $user->id));
 
             return [
                 Stat::make('My Projects', (clone $myTasks)->distinct('project_id')->count('project_id'))
@@ -31,6 +33,11 @@ class ProjectStats extends BaseWidget
                     ->description('Tasks you finished')
                     ->descriptionIcon('heroicon-m-check-circle')
                     ->color('success'),
+
+                Stat::make('Comments On My Tasks', (clone $myComments)->count())
+                    ->description('Discussion on your assigned tasks')
+                    ->descriptionIcon('heroicon-m-chat-bubble-left-right')
+                    ->color('info'),
             ];
         }
 
@@ -40,8 +47,10 @@ class ProjectStats extends BaseWidget
         }
 
         $taskQuery = Task::query();
+        $commentQuery = Comment::query();
         if ($user->role === 'manager') {
             $taskQuery->whereHas('project', fn($q) => $q->where('created_by', $user->id));
+            $commentQuery->whereHas('task.project', fn($q) => $q->where('created_by', $user->id));
         }
 
         return [
@@ -58,6 +67,11 @@ class ProjectStats extends BaseWidget
                 ->description('Successfully finished')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
+
+            Stat::make('Total Comments', (clone $commentQuery)->count())
+                ->description('Comments across visible tasks')
+                ->descriptionIcon('heroicon-m-chat-bubble-left-right')
+                ->color('info'),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Widgets\MyAssignedTasksWidget;
 use App\Filament\Widgets\MyNotificationsWidget;
 use App\Filament\Widgets\ProjectStats;
+use App\Filament\Widgets\RecentCommentsWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -42,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
                 ProjectStats::class,
                 MyNotificationsWidget::class,
                 MyAssignedTasksWidget::class,
+                RecentCommentsWidget::class,
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])

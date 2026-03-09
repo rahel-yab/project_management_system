@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Services\CommentService;
 use App\Http\Resources\CommentResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -16,6 +18,9 @@ class CommentController extends Controller
             'task_id' => 'required|exists:tasks,id',
             'content' => 'required|string|min:3',
         ]);
+
+        $task = Task::findOrFail($validated['task_id']);
+        Gate::authorize('view', $task);
 
         $comment = $this->commentService->addComment($validated);
 
