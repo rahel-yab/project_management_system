@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProjectStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -25,6 +27,7 @@ class StoreProjectRequest extends FormRequest
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
         'deadline' => 'required|date|after:today',
+        'status' => ['sometimes', new Enum(ProjectStatus::class)],
     ];
     }
 }

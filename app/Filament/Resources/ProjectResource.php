@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms;
@@ -46,8 +47,8 @@ class ProjectResource extends Resource
             Forms\Components\Textarea::make('description'),
             Forms\Components\DatePicker::make('deadline')->required(),
             Forms\Components\Select::make('status')
-                ->options(['active' => 'Active', 'completed' => 'Completed'])
-                ->default('active'),
+                ->options(ProjectStatus::options())
+                ->default(ProjectStatus::ACTIVE->value),
             Forms\Components\Hidden::make('created_by')->default(Auth::id()),
         ]);
     }

@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TaskPriority;
+use App\Enums\TaskStatus;
 use App\Filament\Resources\TaskResource\Pages;
-use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -50,10 +51,10 @@ public static function form(Form $form): Form
             ->relationship('developer', 'name')
             ->disabled($isDev)->required(),
         Forms\Components\Select::make('priority')
-            ->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'])
+            ->options(TaskPriority::options())
             ->disabled($isDev)->required(),
         Forms\Components\Select::make('status')
-            ->options(['todo' => 'To Do', 'in_progress' => 'In Progress', 'done' => 'Done'])
+            ->options(TaskStatus::options())
             ->required(),
         Forms\Components\Textarea::make('description')->disabled($isDev),
     ]);
@@ -67,17 +68,17 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('project.name')->sortable(),
             Tables\Columns\TextColumn::make('developer.name')->label('Assigned To'),
             Tables\Columns\SelectColumn::make('status') // Quick update for Devs
-                ->options(['todo' => 'To Do', 'in_progress' => 'In Progress', 'done' => 'Done']),
+                ->options(TaskStatus::options()),
             Tables\Columns\TextColumn::make('priority')->badge(),
         ])
         ->filters([
             Tables\Filters\SelectFilter::make('status')
                 ->label('Status')
-                ->options(['todo' => 'To Do', 'in_progress' => 'In Progress', 'done' => 'Done'])
+                ->options(TaskStatus::options())
                 ->visible(fn () => Auth::user()?->role === 'admin'),
             Tables\Filters\SelectFilter::make('priority')
                 ->label('Priority')
-                ->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'])
+                ->options(TaskPriority::options())
                 ->visible(fn () => Auth::user()?->role === 'admin'),
             Tables\Filters\SelectFilter::make('assigned_to')
                 ->label('Assigned User')
