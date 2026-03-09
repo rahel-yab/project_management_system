@@ -55,11 +55,11 @@ class AuthService
 
         if ($status !== Password::RESET_LINK_SENT) {
             throw ValidationException::withMessages([
-                'email' => [__($status)],
+                'email' => [$this->passwordStatusMessage($status)],
             ]);
         }
 
-        return ['message' => __($status)];
+        return ['message' => 'Password reset link sent successfully.'];
     }
 
     public function resetPassword(array $data): array
@@ -68,7 +68,6 @@ class AuthService
             [
                 'email' => $data['email'],
                 'password' => $data['password'],
-                'password_confirmation' => $data['password_confirmation'],
                 'token' => $data['token'],
             ],
             function (User $user, string $password): void {
@@ -83,10 +82,28 @@ class AuthService
 
         if ($status !== Password::PASSWORD_RESET) {
             throw ValidationException::withMessages([
-                'email' => [__($status)],
+                $this->passwordStatusField($status) => [$this->passwordStatusMessage($status)],
             ]);
         }
 
-        return ['message' => __($status)];
+        return ['message' => 'Password has been reset successfully.'];
+    }
+
+    private function passwordStatusMessage(string $status): string
+    {
+        return match ($status) {
+            Password::INVALID_USER => 'No account found with that email address.',
+            Password::RESET_THROTTLED => 'Please wait before requesting another reset link.',
+            Password::INVALID_TOKEN => 'This reset token is invalid or has expired.',
+            default => __($status),
+        };
+    }
+
+    private function passwordStatusField(string $status): string
+    {
+        return match ($status) {
+            Password::INVALID_TOKEN => 'token',
+            default => 'email',
+        };
     }
 }
