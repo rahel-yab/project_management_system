@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
@@ -56,11 +57,7 @@ class MyAssignedTasksWidget extends BaseWidget
                     ->form([
                         Select::make('status')
                             ->label('Status')
-                            ->options([
-                                'todo' => 'To Do',
-                                'in_progress' => 'In Progress',
-                                'done' => 'Done',
-                            ])
+                            ->options(TaskStatus::options())
                             ->required(),
                     ])
                     ->fillForm(fn (Task $record): array => [
