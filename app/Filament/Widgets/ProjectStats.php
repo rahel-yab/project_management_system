@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectStats extends BaseWidget
 {
+    protected static ?int $sort = 1;
+
+    protected int|string|array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $user = Auth::user();

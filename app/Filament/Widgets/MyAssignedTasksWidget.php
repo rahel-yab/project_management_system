@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Gate;
 
 class MyAssignedTasksWidget extends BaseWidget
 {
+    protected static ?int $sort = 2;
+
     protected static ?string $heading = 'My Assigned Tasks';
 
     protected int|string|array $columnSpan = 'full';

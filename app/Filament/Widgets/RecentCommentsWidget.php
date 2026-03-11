@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class RecentCommentsWidget extends BaseWidget
 {
+    protected static ?int $sort = 4;
+
     protected static ?string $heading = 'Recent Comments';
 
     protected int|string|array $columnSpan = 'full';

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 
 class MyNotificationsWidget extends BaseWidget
 {
+    protected static ?int $sort = 3;
+
     protected static ?string $heading = 'My Notifications';
 
     protected int|string|array $columnSpan = 'full';
